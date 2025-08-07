@@ -7,7 +7,7 @@ const Welcome = () => {
       {/* Left Section */}
       <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center items-center text-center lg:text-left">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Your journey, <br /> delivered with <br /> precision.
+          Your journey, <br /> delivered rapido <br /> precision.
         </h1>
         <p className="text-gray-600 mb-6 max-w-md">
           Experience reliable, real-time tracking and seamless delivery for all
