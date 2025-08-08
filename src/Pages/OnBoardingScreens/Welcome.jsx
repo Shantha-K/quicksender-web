@@ -31,11 +31,11 @@ const Welcome = () => {
           className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md w-80 mb-3"
           onClick={handleLogin}
         >
-          Log In
+          Get Started
         </button>
-        <button className="border border-gray-300 hover:bg-gray-100 text-gray-700 px-6 py-2 rounded-md w-80">
+        {/* <button className="border border-gray-300 hover:bg-gray-100 text-gray-700 px-6 py-2 rounded-md w-80">
           Sign Up
-        </button>
+        </button> */}
       </div>
     </div>
   );
