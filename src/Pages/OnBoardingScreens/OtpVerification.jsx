@@ -3,11 +3,13 @@ import otplogo from "../../assets/otplogo.png";
 import logo from "../../assets/shifter.png";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../Service/ApiService";
+import Model from "../../Components/Model/Model";
 
 const OTPVerification = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const mobile = localStorage.getItem("mobile");
 
@@ -36,7 +38,7 @@ const OTPVerification = () => {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("mobile", response.data.data.mobile);
-        navigate("/create-account");
+        setShowModal(true);
       } else {
         setError("Invalid OTP");
       }
@@ -82,7 +84,10 @@ const OTPVerification = () => {
               />
             ))}
           </div>
-
+          <p className="text-sm text-gray-500 mb-2">
+            Sent OTP:{" "}
+            <span className="font-bold">{localStorage.getItem("otp")}</span>
+          </p>
           {/* Error Message */}
           {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
@@ -103,6 +108,16 @@ const OTPVerification = () => {
           </button>
         </div>
       </main>
+
+      {showModal && (
+        <Model
+          isOpen={showModal}
+          title="OTP Verified!"
+          message="Your OTP has been successfully verified."
+          buttonText="Done"
+          onClose={() => navigate("/create-account")}
+        />
+      )}
     </div>
   );
 };

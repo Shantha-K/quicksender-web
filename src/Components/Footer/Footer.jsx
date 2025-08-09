@@ -1,0 +1,61 @@
+import logo from "../../assets/shifter.png";
+
+const Footer = () => {
+  return (
+    <footer
+      className="text-white py-8 px-8"
+      style={{
+        backgroundImage: "linear-gradient(to right, #00C680, #09F8A0)",
+      }}
+    >
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div>
+          <img src={logo} alt="Logo" className="h-20 mb-2" />
+          <p className="text-sm">
+            Effortless Parcel Tracking, Seamless <br />
+            Deliveries.
+          </p>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-2">Quick Links</h4>
+          <ul className="text-sm space-y-1">
+            <li>
+              <a href="#">Track Package</a>
+            </li>
+            <li>
+              <a href="#">My Orders</a>
+            </li>
+            <li>
+              <a href="#">Support Center</a>
+            </li>
+            <li>
+              <a href="#">About Us</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-2">Contact</h4>
+          <p className="text-sm">+1 (123) 456-7890</p>
+          <p className="text-sm">info@shifter.com</p>
+        </div>
+        <div>
+          <h4 className="font-semibold mb-2">Follow Us</h4>
+          <div className="flex gap-2">
+            <div className="w-6 h-6 bg-white rounded-full" />
+            <div className="w-6 h-6 bg-white rounded-full" />
+            <div className="w-6 h-6 bg-white rounded-full" />
+            <div className="w-6 h-6 bg-white rounded-full" />
+          </div>
+        </div>
+      </div>
+      <div className="text-center text-xs text-white mt-6">
+        © 2025 Shifter. All rights reserved.
+      </div>
+      <div className="text-center text-xs text-white mt-1">
+        Made with <span className="font-bold">Ysisly</span>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
