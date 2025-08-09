@@ -1,25 +1,76 @@
 import logo from "../../assets/shifter.png";
 import profileImage from "../../assets/profileimg.png";
 import { FaCamera } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Model from "../../Components/Model/Model";
+import axios from "axios";
 
 const AccountCreation = () => {
+  const API_URL = import.meta.env.VITE_REACT_APP_URL;
+
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     email: "",
     mobile: "",
     dob: "",
     address: "",
+    profileImage: null,
   });
+  const [showModal, setShowModal] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(form);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setForm((prevForm) => ({ ...prevForm, profileImage: file }));
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+        localStorage.setItem("profileImage", reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    try {
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("email", form.email);
+      formData.append("mobile", form.mobile);
+      formData.append("dob", form.dob);
+      formData.append("address", form.address);
+      if (form.profileImage) {
+        formData.append("profileImage", form.profileImage);
+      }
+
+      const response = await axios.post(`${API_URL}/register`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.success) {
+        setShowModal(true);
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+    } catch (error) {
+      console.log("Upload error:", error.response?.data || error.message);
+    }
+  };
+
   useEffect(() => {
     const savedMobile = localStorage.getItem("mobile");
     if (savedMobile) {
@@ -34,30 +85,35 @@ const AccountCreation = () => {
         <img src={logo} alt="Shifter Logo" className="w-28 h-auto" />
       </header>
 
-      {/* Title Section */}
-      <div className="text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-          Verification Successful!
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Now, let's create your account to get started with{" "}
-          <strong>ParcelTrack</strong>.
-        </p>
-      </div>
-
       {/* Profile Form */}
-      <div className="max-w-2xl w-full mx-auto mt-4 bg-gray-50 p-6 rounded-xl shadow-md">
+      <div className="max-w-2xl w-full mx-auto mt-4 bg-gray-50 p-8 rounded-xl shadow-md">
         <div className="flex flex-col items-center">
           <div className="relative mt-[-2rem]">
+            {/* Profile Image Preview */}
             <img
-              src={profileImage}
+              src={preview || profileImage} // fallback if preview not selected
               alt="Profile"
               className="w-24 h-24 rounded-full shadow-md object-cover mt-2"
             />
-            <div className="absolute bottom-0 right-0 bg-green-500 rounded-full p-1">
+
+            {/* Camera Icon Button (click triggers file input) */}
+            <div
+              className="absolute bottom-0 right-0 bg-green-500 rounded-full p-1 cursor-pointer"
+              onClick={() => fileInputRef.current.click()}
+            >
               <FaCamera className="text-white text-sm" />
             </div>
+
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              className="hidden"
+            />
           </div>
+
           <h2 className="mt-2 text-xl font-semibold text-gray-700">
             Complete Your Profile
           </h2>
@@ -117,7 +173,7 @@ const AccountCreation = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter your phone number"
-              disabled // prevent changing mobile
+              // disabled // prevent changing mobile
             />
           </div>
 
@@ -145,6 +201,17 @@ const AccountCreation = () => {
           </div>
         </form>
       </div>
+
+      {/* Modal for successful account creation */}
+      {showModal && (
+        <Model
+          isOpen={showModal}
+          title="Account created successfully!"
+          message="Your account created successfully."
+          buttonText="Done"
+          onClose={() => navigate("/dashboard")}
+        />
+      )}
     </div>
   );
 };

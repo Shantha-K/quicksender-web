@@ -10,9 +10,11 @@ const axiosInstance = axios.create({
 });
 
 const ApiService = {
-  get: (endpoint, params) => axiosInstance.get(endpoint, { params }),
-  post: (endpoint, data) => axiosInstance.post(endpoint, data),
-  put: (endpoint, data) => axiosInstance.put(endpoint, data),
-  delete: (endpoint) => axiosInstance.delete(endpoint),
+  post: (endpoint, data, token) =>
+    axiosInstance.post(endpoint, data, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }),
 };
 export default ApiService;
+
+// get: (endpoint, params) => axiosInstance.get(endpoint, { params }),
