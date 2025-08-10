@@ -38,6 +38,7 @@ const OTPVerification = () => {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("mobile", response.data.data.mobile);
+        localStorage.removeItem("otp");
         setShowModal(true);
       } else {
         setError("Invalid OTP");

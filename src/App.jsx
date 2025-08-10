@@ -11,7 +11,13 @@ const AccountCreation = lazy(() =>
   import("./Pages/OnBoardingScreens/AccountCreation")
 );
 const DashBoard = lazy(() => import("./Pages/DashBoardScreens/DashBoard"));
-const Profile = lazy(() => import("./Pages/ProfileScreens/Profile"));
+
+const ProfileLayout = lazy(() =>
+  import("./Pages/ProfileScreens/ProfileLayout")
+);
+const EditProfile = lazy(() => import("./Pages/ProfileScreens/EditProfile"));
+const KycDetails = lazy(() => import("./Pages/ProfileScreens/KycDetails"));
+
 const SendParcel = lazy(() => import("./Pages/SendParcelScreens/SendParcel"));
 const SenderDetails = lazy(() =>
   import("./Pages/SendParcelScreens/SenderDetails")
@@ -35,15 +41,19 @@ function App() {
         }
       >
         <Routes>
-          {/* Main pages */}
+          {/* Onboarding Screens */}
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
           <Route path="/otpverification" element={<OtpVerification />} />
           <Route path="/create-account" element={<AccountCreation />} />
           <Route path="/dashboard" element={<DashBoard />} />
-          <Route path="/profile" element={<Profile />} />
 
-          {/* Send Parcel steps */}
+          {/* Profile Section */}
+          <Route path="/profile" element={<ProfileLayout />} />
+          <Route path="/profile/edit-profile" element={<EditProfile />} />
+          <Route path="/profile/kyc-details" element={<KycDetails />} />
+
+          {/* Send Parcel Screens */}
           <Route path="/send-parcel" element={<SendParcel />} />
           <Route
             path="/send-parcel/sender-details"
