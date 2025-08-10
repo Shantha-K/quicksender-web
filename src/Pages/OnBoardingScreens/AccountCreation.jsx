@@ -34,7 +34,7 @@ const AccountCreation = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
-        localStorage.setItem("profileImage", reader.result);
+        // localStorage.setItem("profileImage", reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -62,6 +62,7 @@ const AccountCreation = () => {
       });
 
       if (response.data.success) {
+        localStorage.setItem("userId", response.data.data._id);
         setShowModal(true);
       } else {
         alert("Registration failed. Please try again.");
@@ -173,7 +174,7 @@ const AccountCreation = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Enter your phone number"
-              // disabled // prevent changing mobile
+              disabled // prevent changing mobile
             />
           </div>
 
