@@ -13,12 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser, fetchRegisteredUser } from "../../Redux/Slice/userSlice";
 import { useEffect } from "react";
+import { MdDashboard } from "react-icons/md";
 
 const SideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.user);
-  const API_URL = import.meta.env.VITE_REACT_APP_URL;
+  const IMG_URL = import.meta.env.VITE_REACT_IMAGE_URL;
 
   const handleLogout = () => {
     dispatch(clearUser());
@@ -40,7 +41,12 @@ const SideBar = () => {
       }}
     >
       {/* Menu Items */}
-      <div className="space-y-6">
+      <div className="space-y-5 mb-2">
+        <SidebarItem
+          icon={<MdDashboard />}
+          text="Dashboard Overview"
+          onClick={() => navigate("/profile")}
+        />
         <SidebarItem
           icon={<FaUserEdit />}
           text="Edit profile"
@@ -55,19 +61,27 @@ const SideBar = () => {
         <SidebarItem icon={<FaBox />} text="Sent Parcels" />
         <SidebarItem icon={<FaTruck />} text="Delivered Parcels" />
         <SidebarItem icon={<FaWallet />} text="My Wallet" />
-        <SidebarItem icon={<FaLock />} text="Privacy Policy" />
-        <SidebarItem icon={<FaLock />} text="Terms & Conditions" />
+        <SidebarItem
+          icon={<FaLock />}
+          text="Privacy Policy"
+          onClick={() => navigate("/profile/privacy-policy")}
+        />
+        <SidebarItem
+          icon={<FaLock />}
+          text="Terms & Conditions"
+          onClick={() => navigate("/profile/terms-conditions")}
+        />
       </div>
 
       {/* Logout + Profile */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Profile card */}
         <div className="bg-white/20 rounded-xl text-center py-4 px-2 relative">
           <div className="relative w-20 h-20 mx-auto mb-2">
             <img
               src={
                 user?.profileImage
-                  ? `${API_URL}/${user.profileImage}`
+                  ? `${IMG_URL}/${user.profileImage}`
                   : "fallback-image.jpg"
               }
               alt="Profile"

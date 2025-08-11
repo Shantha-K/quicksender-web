@@ -107,8 +107,8 @@ const Summary = () => {
         </Card>
 
         <Card title="Payment">
-          <p>Payment Type : {payment.type}</p>
-          <p>Delivery Fee : {payment.fee}</p>
+          <p>Payment Type : {payment.paymentType}</p>
+          <p>Delivery Fee : {payment.deliveryFee}</p>
         </Card>
       </div>
       <div className="flex justify-center mb-6">

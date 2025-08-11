@@ -1,6 +1,6 @@
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
-import cube from "../../assets/cube.png";
+import cube from "../../assets/parcel.png";
 import van from "../../assets/van.png";
 import { useNavigate } from "react-router-dom";
 
@@ -50,7 +50,7 @@ const SendParcel = () => {
         {/* Steps section */}
         <section className="bg-[#FAFAFB] rounded-xl p-8 py-12">
           <h2 className="text-2xl font-bold mb-8 text-center">
-            Steps to Work as a Delivery Partner
+            Steps to Send Delivery
           </h2>
 
           <div className="space-y-6">

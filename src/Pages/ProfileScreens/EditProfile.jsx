@@ -4,11 +4,13 @@ import SideBar from "../../Components/Sidebar/Sidebar";
 import ApiService from "../../Service/ApiService";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRegisteredUser } from "../../Redux/Slice/userSlice";
+import Model from "../../Components/Model/Model";
 
 const EditProfile = () => {
+  const [showModal, setShowModal] = useState(false);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const API_URL = import.meta.env.VITE_REACT_APP_URL;
+  const IMG_URL = import.meta.env.VITE_REACT_IMAGE_URL;
 
   const [form, setForm] = useState({
     name: "",
@@ -16,17 +18,11 @@ const EditProfile = () => {
     mobile: "",
     dob: "",
     address: "",
-    profileImage: null, // file object
+    profileImage: null,
   });
 
   const [preview, setPreview] = useState(null);
 
-  // Fetch user data on component mount
-  useEffect(() => {
-    dispatch(fetchRegisteredUser());
-  }, [dispatch]);
-
-  // When user data arrives, populate form and preview
   useEffect(() => {
     if (user) {
       setForm({
@@ -37,7 +33,7 @@ const EditProfile = () => {
         address: user.address || "",
         profileImage: null,
       });
-      setPreview(user.profileImage ? `${API_URL}/${user.profileImage}` : null);
+      setPreview(`${IMG_URL}/${user.profileImage || "default.jpg"}`);
     }
   }, [user]);
 
@@ -58,7 +54,8 @@ const EditProfile = () => {
 
     try {
       const userId = localStorage.getItem("userId");
-      if (!userId) throw new Error("No user ID found");
+      const token = localStorage.getItem("token");
+      if (!userId || !token) throw new Error("User ID or token missing");
 
       const formData = new FormData();
       formData.append("name", form.name);
@@ -66,21 +63,28 @@ const EditProfile = () => {
       formData.append("mobile", form.mobile);
       formData.append("dob", form.dob);
       formData.append("address", form.address);
-      if (form.profileImage) {
+
+      // Append image ONLY if it's a File (not a string URL)
+      if (form.profileImage instanceof File) {
         formData.append("profileImage", form.profileImage);
       }
 
-      const token = localStorage.getItem("token");
-
-      const response = await ApiService.put(
+      const response = await ApiService.putFormData(
         `/editprofile/${userId}`,
         formData,
         token
       );
 
       if (response.data.success) {
-        alert("Profile updated successfully!");
-        dispatch(fetchRegisteredUser()); // refresh user data in redux
+        setShowModal(true);
+        dispatch(fetchRegisteredUser()).then((action) => {
+          if (action.payload?.profileImage) {
+            // Force reload new image
+            setPreview(
+              `${IMG_URL}/${action.payload.profileImage}?t=${Date.now()}`
+            );
+          }
+        });
       } else {
         alert("Update failed, please try again.");
       }
@@ -89,28 +93,27 @@ const EditProfile = () => {
     }
   };
 
+  useEffect(() => {
+    dispatch(fetchRegisteredUser());
+  }, [dispatch]);
+
   return (
     <div className="h-screen flex flex-col">
       <NavBar />
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <div className="h-full">
-          <SideBar />
-        </div>
-
-        {/* Main Content */}
+        <SideBar />
         <div
           className="flex-1 p-8 overflow-auto"
           style={{ backgroundColor: "#F2FCF8" }}
         >
-          <div className="mx-auto p-8 rounded-xl shadow ">
-            <h1 className="text-2xl font-bold text-center mb-6">
+          <div className="mx-auto p-8 rounded-xl shadow">
+            <h1 className="text-2xl font-bold text-center mb-4">
               Edit Profile
             </h1>
 
             <div className="flex justify-center mb-4">
               <img
-                src={preview || "https://via.placeholder.com/100"}
+                src={preview}
                 alt="Profile"
                 className="w-24 h-24 rounded-full object-cover"
               />
@@ -119,7 +122,7 @@ const EditProfile = () => {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <label className="block text-sm font-medium">Name</label>
                   <input
                     type="text"
                     name="name"
@@ -131,9 +134,7 @@ const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Email
-                  </label>
+                  <label className="block text-sm font-medium">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -145,9 +146,7 @@ const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Mobile
-                  </label>
+                  <label className="block text-sm font-medium">Mobile</label>
                   <input
                     type="tel"
                     name="mobile"
@@ -159,7 +158,7 @@ const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium">
                     Date of Birth
                   </label>
                   <input
@@ -174,9 +173,7 @@ const EditProfile = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Address
-                </label>
+                <label className="block text-sm font-medium">Address</label>
                 <textarea
                   name="address"
                   rows={3}
@@ -187,12 +184,11 @@ const EditProfile = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium">
                   Profile Image
                 </label>
                 <input
                   type="file"
-                  accept="image/*"
                   onChange={handleImageChange}
                   className="w-full"
                 />
@@ -201,7 +197,7 @@ const EditProfile = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg"
+                  className="w-40 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2 px-6 rounded-lg"
                 >
                   Save Profile
                 </button>
@@ -209,6 +205,16 @@ const EditProfile = () => {
             </form>
           </div>
         </div>
+
+        {showModal && (
+          <Model
+            isOpen={showModal}
+            title="Profile updated successfully!"
+            message="Your profile has been updated."
+            buttonText="Done"
+            onClose={() => setShowModal(false)}
+          />
+        )}
       </div>
     </div>
   );
