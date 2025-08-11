@@ -17,6 +17,12 @@ const ProfileLayout = lazy(() =>
 );
 const EditProfile = lazy(() => import("./Pages/ProfileScreens/EditProfile"));
 const KycDetails = lazy(() => import("./Pages/ProfileScreens/KycDetails"));
+const TermsConditions = lazy(() =>
+  import("./Pages/ProfileScreens/TermsConditions")
+);
+const PrivacyPolicy = lazy(() =>
+  import("./Pages/ProfileScreens/PrivacyPolicy")
+);
 
 const SendParcel = lazy(() => import("./Pages/SendParcelScreens/SendParcel"));
 const SenderDetails = lazy(() =>
@@ -52,6 +58,11 @@ function App() {
           <Route path="/profile" element={<ProfileLayout />} />
           <Route path="/profile/edit-profile" element={<EditProfile />} />
           <Route path="/profile/kyc-details" element={<KycDetails />} />
+          <Route
+            path="/profile/terms-conditions"
+            element={<TermsConditions />}
+          />
+          <Route path="/profile/privacy-policy" element={<PrivacyPolicy />} />
 
           {/* Send Parcel Screens */}
           <Route path="/send-parcel" element={<SendParcel />} />

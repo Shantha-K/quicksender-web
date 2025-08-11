@@ -4,11 +4,9 @@ import { FaCamera } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Model from "../../Components/Model/Model";
-import axios from "axios";
+import ApiService from "../../Service/ApiService";
 
 const AccountCreation = () => {
-  const API_URL = import.meta.env.VITE_REACT_APP_URL;
-
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
@@ -34,7 +32,6 @@ const AccountCreation = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
-        // localStorage.setItem("profileImage", reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -55,11 +52,11 @@ const AccountCreation = () => {
         formData.append("profileImage", form.profileImage);
       }
 
-      const response = await axios.post(`${API_URL}/register`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await ApiService.postFormData(
+        "/register",
+        formData,
+        token
+      );
 
       if (response.data.success) {
         localStorage.setItem("userId", response.data.data._id);

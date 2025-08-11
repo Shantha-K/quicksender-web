@@ -2,38 +2,38 @@ import { useEffect, useState } from "react";
 import logo from "../../assets/shifter.png";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const [profileImage, setProfileImage] = useState(null);
-
-  useEffect(() => {
-    const savedImage = localStorage.getItem("profileImage");
-    if (savedImage) setProfileImage(savedImage);
-  }, []);
+  const { user } = useSelector((state) => state.user);
+  const IMG_URL = import.meta.env.VITE_REACT_IMAGE_URL;
 
   return (
     <header
       className="flex items-center justify-between px-6 py-2"
       style={{ backgroundColor: "#00C27C" }}
     >
-      <div className="flex items-center gap-4">
+      <div
+        className="flex items-center gap-4"
+        // onClick={() => navigate("/dashboard")}
+      >
         <img src={logo} alt="Shifter Logo" className="h-16 w-auto" />
       </div>
-      <nav className="hidden md:flex gap-6 text-sm font-medium text-white">
-        <Link to="/parcel" className="hover:text-gray-200">
+      <nav className="hidden md:flex gap-6 text-md font-medium text-white">
+        <Link to="/dashboard" className="hover:text-gray-200">
           Parcel
         </Link>
-        <Link to="/send-parcel" className="hover:text-gray-200">
+        <Link to="/send-parcel" className="hover:text-gray-300">
           Sender
         </Link>
-        <Link to="/partner" className="hover:text-gray-200">
+        <Link to="/partner" className="hover:text-gray-300">
           Partner
         </Link>
-        <Link to="/calculator" className="hover:text-gray-200">
+        <Link to="/calculator" className="hover:text-gray-300">
           Calculator
         </Link>
-        <Link to="/about-us" className="hover:text-gray-200">
+        <Link to="/about-us" className="hover:text-gray-300">
           About us
         </Link>
       </nav>
@@ -42,7 +42,11 @@ const NavBar = () => {
         onClick={() => navigate("/profile")}
       >
         <img
-          src={profileImage}
+          src={
+            user?.profileImage
+              ? `${IMG_URL}/${user.profileImage}`
+              : "fallback-image.jpg"
+          }
           alt="Profile"
           className="w-8 h-8 rounded-full object-cover"
         />

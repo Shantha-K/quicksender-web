@@ -11,7 +11,7 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 px-8 py-10 bg-white grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 pl-8">
+        <div className="md:col-span-2 ">
           <h2 className="text-xl font-semibold mb-8">My Parcels</h2>
           <div className="max-w-lg mb-2">
             <p className="mb-3">Enter Parcel Number</p>
@@ -36,7 +36,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 pr-8">
+        <div className="flex flex-col gap-6">
           <div className="border border-green-300 rounded-xl p-4">
             <h3 className="font-semibold mb-2">Send Parcel</h3>
             <p className="text-sm text-gray-600 mb-2">
