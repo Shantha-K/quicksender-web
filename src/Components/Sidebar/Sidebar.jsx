@@ -60,7 +60,11 @@ const SideBar = () => {
         <SidebarItem icon={<FaBell />} text="Notifications" />
         <SidebarItem icon={<FaBox />} text="Sent Parcels" />
         <SidebarItem icon={<FaTruck />} text="Delivered Parcels" />
-        <SidebarItem icon={<FaWallet />} text="My Wallet" />
+        <SidebarItem
+          icon={<FaWallet />}
+          text="My Wallet"
+          onClick={() => navigate("/profile/my-wallet")}
+        />
         <SidebarItem
           icon={<FaLock />}
           text="Privacy Policy"

@@ -27,7 +27,7 @@ const NavBar = () => {
         <Link to="/send-parcel" className="hover:text-gray-300">
           Sender
         </Link>
-        <Link to="/partner" className="hover:text-gray-300">
+        <Link to="/delivery-partner" className="hover:text-gray-300">
           Partner
         </Link>
         <Link to="/calculator" className="hover:text-gray-300">

@@ -3,8 +3,10 @@ import deliveryparcel from "../../assets/deliveryparcel.png";
 import noparcel from "../../assets/noparcel.png";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
@@ -37,7 +39,10 @@ const Dashboard = () => {
         </div>
 
         <div className="flex flex-col gap-6">
-          <div className="border border-green-300 rounded-xl p-4">
+          <div
+            className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md"
+            onClick={() => navigate("/send-parcel")}
+          >
             <h3 className="font-semibold mb-2">Send Parcel</h3>
             <p className="text-sm text-gray-600 mb-2">
               Send your parcel from any location to any destination worldwide.
@@ -49,7 +54,7 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="border border-green-300 rounded-xl p-4">
+          <div className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md">
             <h3 className="font-semibold mb-2">Delivery Parcel</h3>
             <p className="text-sm text-gray-600 mb-2">
               Arrange for safe and timely delivery of your packages.
