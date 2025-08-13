@@ -21,9 +21,8 @@ const KycDetails = () => {
       setPreview(fileURL);
     }
   };
-  const handlekycSubmit = async (e) => {
+  const handleKycSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
     if (
       !idType ||
@@ -34,33 +33,24 @@ const KycDetails = () => {
       return;
     }
 
-    try {
-      const formData = new FormData();
-      formData.append("kycType", idType);
-      formData.append("kycFront", frontInputRef.current.files[0]);
-      formData.append("kycBack", backInputRef.current.files[0]);
+    const formData = new FormData();
+    formData.append("kycType", idType);
+    formData.append("kycFront", frontInputRef.current.files[0]);
+    formData.append("kycBack", backInputRef.current.files[0]);
 
-      const response = await ApiService.postFormData(
-        "/kyc", // endpoint
-        formData,
-        token
-      );
+    try {
+      const token = localStorage.getItem("token");
+      const response = await ApiService.postFormData("/kyc", formData, token);
 
       if (response.data.success) {
         setShowModal(true);
-        console.log("response", response.data);
+        console.log("KYC response:", response.data.data);
       } else {
         alert(response.data.message || "KYC submission failed.");
       }
-    } catch (error) {
-      console.error(
-        "Error submitting KYC details:",
-        error.response?.data || error.message
-      );
-      alert(
-        error.response?.data?.message ||
-          "An error occurred while submitting KYC."
-      );
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert(err.response?.data?.message || "An error occurred.");
     }
   };
 
@@ -169,7 +159,7 @@ const KycDetails = () => {
             {/* Save Button */}
             <div className="flex justify-center">
               <button
-                onClick={handlekycSubmit}
+                onClick={handleKycSubmit}
                 type="submit"
                 className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2 px-6 rounded-lg w-40"
               >

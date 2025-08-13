@@ -9,7 +9,6 @@ const axiosInstance = axios.create({
   },
 });
 
-// Helper: Upload with FormData
 const postFormData = (endpoint, data, token) => {
   return axiosInstance.post(endpoint, data, {
     headers: {
@@ -29,7 +28,11 @@ const putFormData = (endpoint, data, token) => {
 };
 
 const ApiService = {
-  get: (endpoint, params) => axiosInstance.get(endpoint, { params }),
+  get: (endpoint, params, token) =>
+    axiosInstance.get(endpoint, {
+      params,
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }),
   post: (endpoint, data, token) =>
     axiosInstance.post(endpoint, data, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -38,7 +41,7 @@ const ApiService = {
     axiosInstance.put(endpoint, data, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     }),
-  postFormData, 
-  putFormData, // special method for file/image updates
+  postFormData,
+  putFormData,
 };
 export default ApiService;

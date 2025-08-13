@@ -9,7 +9,7 @@ export const fetchRegisteredUser = createAsyncThunk(
       if (!userId) throw new Error("No user ID found");
 
       const response = await ApiService.get(`/getregistered/${userId}`);
-      console.log("Fetched user data:", response.data);
+      // console.log("Fetched user data:", response.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -25,10 +25,10 @@ const userSlice = createSlice({
     error: null,
   },
   reducers: {
-    clearUser(state) {
-      state.user = null;
-      localStorage.removeItem("userId");
-    },
+    // clearUser(state) {
+    //   state.user = null;
+    //   localStorage.removeItem("userId");
+    // },
   },
   extraReducers: (builder) => {
     builder

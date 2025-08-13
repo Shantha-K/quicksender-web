@@ -1,7 +1,7 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import React, { Suspense, lazy } from "react";
 
-// Lazy imports using your correct paths
+// Onboarding Screens
 const Welcome = lazy(() => import("./Pages/OnBoardingScreens/Welcome"));
 const Login = lazy(() => import("./Pages/OnBoardingScreens/Login"));
 const OtpVerification = lazy(() =>
@@ -12,8 +12,9 @@ const AccountCreation = lazy(() =>
 );
 const DashBoard = lazy(() => import("./Pages/DashBoardScreens/DashBoard"));
 
-const ProfileLayout = lazy(() =>
-  import("./Pages/ProfileScreens/ProfileLayout")
+// Profile Screens
+const ProfileDashboard = lazy(() =>
+  import("./Pages/ProfileScreens/ProfileDashboard")
 );
 const EditProfile = lazy(() => import("./Pages/ProfileScreens/EditProfile"));
 const KycDetails = lazy(() => import("./Pages/ProfileScreens/KycDetails"));
@@ -23,7 +24,11 @@ const TermsConditions = lazy(() =>
 const PrivacyPolicy = lazy(() =>
   import("./Pages/ProfileScreens/PrivacyPolicy")
 );
+const Mywallet = lazy(() => import("./Pages/ProfileScreens/Wallet/Mywallet"));
+const Topup = lazy(() => import("./Pages/ProfileScreens/Wallet/Topup"));
+const Withdraw = lazy(() => import("./Pages/ProfileScreens/Wallet/Withdraw"));
 
+// Send Parcel Screens
 const SendParcel = lazy(() => import("./Pages/SendParcelScreens/SendParcel"));
 const SenderDetails = lazy(() =>
   import("./Pages/SendParcelScreens/SenderDetails")
@@ -35,6 +40,14 @@ const ParcelDetails = lazy(() =>
   import("./Pages/SendParcelScreens/ParcelDetails")
 );
 const Summary = lazy(() => import("./Pages/SendParcelScreens/Summary"));
+
+// Delivery Partner Screens
+const DeliveryPartner = lazy(() =>
+  import("./Pages/DeliveryPartnerScreens/DeliveryPartner")
+);
+const DeliveryDetails = lazy(() =>
+  import("./Pages/DeliveryPartnerScreens/DeliveryDetails")
+);
 
 function App() {
   return (
@@ -55,16 +68,19 @@ function App() {
           <Route path="/dashboard" element={<DashBoard />} />
 
           {/* Profile Section */}
-          <Route path="/profile" element={<ProfileLayout />} />
+          <Route path="/profile" element={<ProfileDashboard />} />
           <Route path="/profile/edit-profile" element={<EditProfile />} />
           <Route path="/profile/kyc-details" element={<KycDetails />} />
+          <Route path="/profile/my-wallet" element={<Mywallet />} />
+          <Route path="/profile/topup" element={<Topup />} />
+          <Route path="/profile/withdraw" element={<Withdraw />} />
           <Route
             path="/profile/terms-conditions"
             element={<TermsConditions />}
           />
           <Route path="/profile/privacy-policy" element={<PrivacyPolicy />} />
 
-          {/* Send Parcel Screens */}
+          {/* Send Parcel Section */}
           <Route path="/send-parcel" element={<SendParcel />} />
           <Route
             path="/send-parcel/sender-details"
@@ -80,7 +96,12 @@ function App() {
           />
           <Route path="/send-parcel/review" element={<Summary />} />
 
-          {/* Fallback route */}
+          {/* Delivery Partner Section */}
+          <Route path="/delivery-partner" element={<DeliveryPartner />} />
+          <Route
+            path="/delivery-partner/delivery-details"
+            element={<DeliveryDetails />}
+          />
         </Routes>
       </Suspense>
     </Router>

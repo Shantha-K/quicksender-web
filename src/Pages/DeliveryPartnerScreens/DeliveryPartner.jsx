@@ -1,0 +1,188 @@
+import { useNavigate } from "react-router-dom";
+import NavBar from "../../Components/NavBar/NavBar";
+import deliverybox from "../../assets/deliverybox.png";
+import deliverypartner from "../../assets/deliverypartner.png";
+import kyccard from "../../assets/kyccard.png";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchKycStatus } from "../../Redux/Slice/kycSlice";
+import { useEffect } from "react";
+import Footer from "../../Components/Footer/Footer";
+
+const DeliveryPartner = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { status, loading, error } = useSelector((state) => state.kyc);
+
+  useEffect(() => {
+    dispatch(fetchKycStatus());
+  }, [dispatch]);
+
+  const renderTopSection = () => {
+    if (loading) {
+      return <p>Loading...</p>;
+    }
+
+    if (error) {
+      return <p className="text-red-500">Error fetching KYC status.</p>;
+    }
+    switch (status) {
+      case "verify":
+        return (
+          <div className="bg-white rounded-lg shadow p-6 flex flex-col items-start">
+            <img src={kyccard} alt="KYC Card" className="w-20 h-20 mb-4" />
+            <h2 className="text-2xl font-semibold mb-2">Complete KYC</h2>
+            <p className="text-gray-600 mb-6 text-md">
+              Verify your identity to start delivering parcels.
+            </p>
+            <button
+              onClick={() => navigate("/profile/kyc-details")}
+              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+            >
+              Complete KYC
+            </button>
+          </div>
+        );
+
+      case "pending":
+        return (
+          <div className="bg-white rounded-lg shadow p-6 flex flex-col items-start">
+            <img src={kyccard} alt="KYC Pending" className="w-20 h-20 mb-4" />
+            <h2 className="text-2xl font-semibold mb-2">KYC Pending</h2>
+            <p className="text-gray-600 mb-6 text-md">
+              Waiting to verify your KYC details.
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-yellow-400 h-2 rounded-full"
+                style={{ width: "60%" }}
+              ></div>
+            </div>
+          </div>
+        );
+
+      case "verified":
+        return (
+          <div className="bg-white rounded-lg shadow p-6 flex flex-col items-start">
+            <img
+              src={deliverybox}
+              alt="Delivery Parcel Icon"
+              className="w-20 h-20 mb-4"
+            />
+            <h2 className="text-2xl font-semibold mb-2">Delivery Parcels</h2>
+            <p className="text-gray-600 mb-6 text-md">
+              Start your earning working with us as a delivery partner.
+            </p>
+            <button
+              onClick={() => navigate("/delivery-partner/delivery-details")}
+              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+            >
+              Start Delivery
+            </button>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <NavBar />
+      {/* Main content */}
+      <main className="flex-1 max-w-7xl mx-auto px-4 py-12">
+        {/* Header */}
+        <h1 className="text-3xl font-bold mb-2">Delivery Partner</h1>
+        <p className="text-gray-600 mb-10">
+          Just a few steps to complete and then you can start earning with
+          dotpiece!
+        </p>
+
+        {/* Top section:Delivery Partner card + Image */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-16">
+          {/* Left card */}
+          {renderTopSection()}
+
+          {/* Right image */}
+          <div>
+            <img
+              src={deliverypartner}
+              alt="Delivery Van"
+              className="rounded-md w-full object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Steps section */}
+        <section className="bg-[#FAFAFB] rounded-xl p-8 py-12">
+          <h2 className="text-2xl font-bold mb-8 text-center">
+            Steps to Work as a Delivery Partner
+          </h2>
+
+          <div className="space-y-6">
+            {/* Step 1 */}
+            <div className="flex gap-4 bg-white rounded-lg shadow p-5">
+              <div className="flex-shrink-0 bg-green-100 w-12 h-12 rounded-full flex items-center justify-center font-bold text-green-600">
+                1
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">Book Delivery</h3>
+                <p className="text-gray-600">
+                  Access our intuitive platform to quickly find and accept
+                  delivery requests that match your route and schedule.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex gap-4 bg-white rounded-lg shadow p-5">
+              <div className="flex-shrink-0 bg-green-100 w-12 h-12 rounded-full flex items-center justify-center font-bold text-green-600">
+                2
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">
+                  Choose Delivery Partner
+                </h3>
+                <p className="text-gray-600">
+                  Connect with reliable delivery partners from our network,
+                  ensuring efficient and timely package handling.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex gap-4 bg-white rounded-lg shadow p-5">
+              <div className="flex-shrink-0 bg-green-100 w-12 h-12 rounded-full flex items-center justify-center font-bold text-green-600">
+                3
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">Track Your Order</h3>
+                <p className="text-gray-600">
+                  Monitor your parcel's journey in real-time with our advanced
+                  tracking system, from pickup to final delivery.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="flex gap-4 bg-white rounded-lg shadow p-5">
+              <div className="flex-shrink-0 bg-green-100 w-12 h-12 rounded-full flex items-center justify-center font-bold text-green-600">
+                4
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg">Deliver at Doorstep</h3>
+                <p className="text-gray-600">
+                  Complete deliveries with ease, ensuring customer satisfaction
+                  with secure and prompt doorstep service.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+       <Footer />
+    </div>
+  );
+};
+
+export default DeliveryPartner;
