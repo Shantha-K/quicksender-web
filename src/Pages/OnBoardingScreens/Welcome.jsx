@@ -10,7 +10,7 @@ const Welcome = () => {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col lg:flex-row items-center justify-center bg-white">
+    <div className="w-full min-h-screen flex flex-col lg:flex-row items-center lg:justify-center bg-white py-8 lg:py-0">
       {/* Left Section */}
       <div className="w-full lg:w-1/2 p-6 lg:pl-32 flex flex-col justify-center items-start text-left">
         <h1 className="text-5xl font-bold text-gray-900 mb-4">
@@ -20,22 +20,22 @@ const Welcome = () => {
           Experience reliable, real-time tracking and seamless delivery for all
           your parcels, every step of the way.
         </p>
-        <img src={delivery_van} alt="Delivery Van" className="w-80 h-auto" />
+        <img
+          src={delivery_van}
+          alt="Delivery Van"
+          className="w-80 h-auto hidden lg:block"
+        />
       </div>
 
       {/* Right Section */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 lg:pr-32">
         <img src={shifter} alt="Shifter Logo" className="w-72 h-auto mb-4" />
-
         <button
           className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md w-80 mb-3"
           onClick={handleLogin}
         >
           Get Started
         </button>
-        {/* <button className="border border-gray-300 hover:bg-gray-100 text-gray-700 px-6 py-2 rounded-md w-80">
-          Sign Up
-        </button> */}
       </div>
     </div>
   );

@@ -2,8 +2,8 @@ const Model = ({ isOpen, title, message, buttonText, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-xl shadow-lg text-center w-full max-w-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+      <div className="bg-white p-6 rounded-xl shadow-lg text-center w-full max-w-md mx-auto">
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
             <svg
@@ -25,7 +25,7 @@ const Model = ({ isOpen, title, message, buttonText, onClose }) => {
         <p className="text-gray-600 mb-6">{message}</p>
         <button
           onClick={onClose}
-          className=" text-white py-2 px-6 rounded"
+          className="text-white py-2 px-6 rounded"
           style={{ backgroundColor: "#00C27C" }}
         >
           {buttonText}
