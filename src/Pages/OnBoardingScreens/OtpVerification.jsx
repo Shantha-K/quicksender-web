@@ -79,6 +79,7 @@ const OTPVerification = () => {
                 id={`otp-${idx}`}
                 type="text"
                 maxLength="1"
+                autoComplete="one-time-code"
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, idx)}
                 className="w-12 h-14 border text-center text-xl border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -124,5 +125,3 @@ const OTPVerification = () => {
 };
 
 export default OTPVerification;
-
-

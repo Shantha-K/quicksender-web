@@ -40,6 +40,9 @@ const ParcelDetails = lazy(() =>
   import("./Pages/SendParcelScreens/ParcelDetails")
 );
 const Summary = lazy(() => import("./Pages/SendParcelScreens/Summary"));
+const ParcelOrders = lazy(() =>
+  import("./Pages/SendParcelScreens/ParcelOrders")
+);
 
 // Delivery Partner Screens
 const DeliveryPartner = lazy(() =>
@@ -48,6 +51,9 @@ const DeliveryPartner = lazy(() =>
 const DeliveryDetails = lazy(() =>
   import("./Pages/DeliveryPartnerScreens/DeliveryDetails")
 );
+
+// calculator
+const Calculator = lazy(() => import("./Pages/Calculator/Calculator"));
 
 function App() {
   return (
@@ -67,6 +73,7 @@ function App() {
           <Route path="/create-account" element={<AccountCreation />} />
           <Route path="/dashboard" element={<DashBoard />} />
 
+
           {/* Profile Section */}
           <Route path="/profile" element={<ProfileDashboard />} />
           <Route path="/profile/edit-profile" element={<EditProfile />} />
@@ -79,6 +86,7 @@ function App() {
             element={<TermsConditions />}
           />
           <Route path="/profile/privacy-policy" element={<PrivacyPolicy />} />
+
 
           {/* Send Parcel Section */}
           <Route path="/send-parcel" element={<SendParcel />} />
@@ -95,6 +103,8 @@ function App() {
             element={<ParcelDetails />}
           />
           <Route path="/send-parcel/review" element={<Summary />} />
+          <Route path="/send-parcel/parcel-orders" element={<ParcelOrders />} />
+
 
           {/* Delivery Partner Section */}
           <Route path="/delivery-partner" element={<DeliveryPartner />} />
@@ -102,6 +112,10 @@ function App() {
             path="/delivery-partner/delivery-details"
             element={<DeliveryDetails />}
           />
+
+
+          {/* Calculator Section */}
+          <Route path="/calculator" element={<Calculator />} />
         </Routes>
       </Suspense>
     </Router>

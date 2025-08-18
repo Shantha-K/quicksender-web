@@ -126,10 +126,10 @@ const DeliveryPartner = () => {
                 1
               </div>
               <div>
-                <h3 className="font-semibold text-lg">Book Delivery</h3>
+                <h3 className="font-semibold text-lg">Complete KYC</h3>
                 <p className="text-gray-600">
-                  Access our intuitive platform to quickly find and accept
-                  delivery requests that match your route and schedule.
+                  Verify your identity by submitting the required documents and
+                  details to become an approved Shifter delivery partner.
                 </p>
               </div>
             </div>
@@ -140,12 +140,10 @@ const DeliveryPartner = () => {
                 2
               </div>
               <div>
-                <h3 className="font-semibold text-lg">
-                  Choose Delivery Partner
-                </h3>
+                <h3 className="font-semibold text-lg">Receive orders</h3>
                 <p className="text-gray-600">
-                  Connect with reliable delivery partners from our network,
-                  ensuring efficient and timely package handling.
+                  Get matched with delivery requests in your area through our
+                  platform, based on your availability and preferences.
                 </p>
               </div>
             </div>
@@ -156,10 +154,10 @@ const DeliveryPartner = () => {
                 3
               </div>
               <div>
-                <h3 className="font-semibold text-lg">Track Your Order</h3>
+                <h3 className="font-semibold text-lg">Deliver Orders</h3>
                 <p className="text-gray-600">
-                  Monitor your parcel's journey in real-time with our advanced
-                  tracking system, from pickup to final delivery.
+                  Pick up parcels from senders and ensure safe, timely delivery
+                  to the customer’s doorstep.
                 </p>
               </div>
             </div>
@@ -170,17 +168,17 @@ const DeliveryPartner = () => {
                 4
               </div>
               <div>
-                <h3 className="font-semibold text-lg">Deliver at Doorstep</h3>
+                <h3 className="font-semibold text-lg">Earn money</h3>
                 <p className="text-gray-600">
-                  Complete deliveries with ease, ensuring customer satisfaction
-                  with secure and prompt doorstep service.
+                  Receive secure payments for completed deliveries and track
+                  your earnings directly in the app.
                 </p>
               </div>
             </div>
           </div>
         </section>
       </main>
-       <Footer />
+      <Footer />
     </div>
   );
 };

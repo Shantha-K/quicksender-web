@@ -16,6 +16,7 @@ const AccountCreation = () => {
     address: "",
     profileImage: null,
   });
+  const [dob, setDob] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);

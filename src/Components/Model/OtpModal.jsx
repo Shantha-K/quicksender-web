@@ -1,9 +1,10 @@
-import React from "react";
+import otplogo from "../../assets/otplogo.png";
 
 const OtpModal = ({
   isOpen,
   onClose,
   otp,
+  sentOtp,
   handleChange,
   handleVerifyOtp,
   loading,
@@ -12,7 +13,12 @@ const OtpModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+      <div className="bg-white pt-0 px-6 pb-6 rounded-lg shadow-lg w-full max-w-sm">
+        <img
+          src={otplogo}
+          alt="OTP Illustration"
+          className="w-40 h-32 mx-auto mb-4"
+        />
         <h2 className="text-2xl font-bold mb-4">Enter OTP</h2>
         <p className="text-gray-600 mb-6">
           Please enter the 4-digit OTP sent to your phone.
@@ -25,6 +31,7 @@ const OtpModal = ({
               key={idx}
               id={`otp-${idx}`}
               type="text"
+              autoComplete="one-time-code"
               maxLength="1"
               value={digit}
               onChange={(e) => handleChange(e.target.value, idx)}
@@ -32,7 +39,9 @@ const OtpModal = ({
             />
           ))}
         </div>
-
+        <p className="text-sm text-gray-500 mb-2">
+          Sent OTP: <span className="font-bold">{sentOtp}</span>
+        </p>
         {/* Verify Button */}
         <button
           onClick={handleVerifyOtp}
@@ -47,9 +56,11 @@ const OtpModal = ({
         </button>
 
         {/* Resend */}
-        <button className="text-green-600 text-sm font-medium hover:underline">
-          Resend OTP
-        </button>
+        <div className="flex justify-center">
+          <button className="text-green-600 text-sm font-medium hover:underline">
+            Resend OTP
+          </button>
+        </div>
       </div>
     </div>
   );

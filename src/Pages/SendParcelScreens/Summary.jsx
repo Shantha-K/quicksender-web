@@ -18,7 +18,10 @@ const Summary = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [error, setError] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
+  const [sentOtp, setSentOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -68,6 +71,7 @@ const Summary = () => {
       });
 
       if (otpResponse.data.success) {
+        setSentOtp(otpResponse.data.otp);
         setShowOtpModal(true);
       } else {
         alert("Failed to request OTP. Please try again.");
@@ -153,7 +157,8 @@ const Summary = () => {
         token
       );
       if (deliveryResponse.data?.success) {
-        alert("Payment & delivery request submitted successfully!");
+        setShowSuccessModal(true);
+        // console.log("deliveryResponse", deliveryResponse);
       } else {
         console.error("Delivery request failed:", error);
         alert("An error occurred while processing your request");
@@ -165,7 +170,7 @@ const Summary = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <NavBar />
 
       <div className="p-6 flex flex-wrap gap-6 justify-center">
@@ -227,9 +232,24 @@ const Summary = () => {
         onClose={() => setShowOtpModal(false)}
         otp={otp}
         handleChange={handleChange}
+        sentOtp={sentOtp}
         handleVerifyOtp={handleVerifyOtp}
         loading={loading}
       />
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <Model
+          isOpen={showSuccessModal}
+          title="Your Parcel has been booked successfully"
+          message="You can track your parcel with tracking id: *****"
+          buttonText="Okay"
+          onClose={() => {
+            setShowSuccessModal(false);
+            navigate("/send-parcel/parcel-orders");
+          }}
+        />
+      )}
     </div>
   );
 };
