@@ -26,12 +26,14 @@ const Topup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
     const payload = {
       userId,
       amount: Number(amount),
     };
     try {
-      const response = await ApiService.post("wallet/topup", payload);
+      const response = await ApiService.post("wallet/topup", payload, token);
+      console.log("topup", response.data);
       if (response.data.success) {
         setShowModal(true);
       } else {

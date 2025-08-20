@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { State, City, Country } from "country-state-city";
 
 const ReceiverDetails = () => {
   const navigate = useNavigate();
@@ -18,15 +19,33 @@ const ReceiverDetails = () => {
     city: "",
     address: "",
   });
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "state") {
+      setCities(City.getCitiesOfState("IN", value)); // load cities for selected state
+      setFormData((prev) => ({
+        ...prev,
+        state: value,
+        city: "", // reset city
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
+  useEffect(() => {
+    setStates(State.getStatesOfCountry("IN")); // load Indian states once
+  }, []);
+
   const handleNext = () => {
+    const payload = { ...formData };
+
     navigate("/send-parcel/parcel-details", {
-      state: { sender, receiver: formData },
+      state: { sender, receiver: payload },
     });
   };
 
@@ -103,9 +122,12 @@ const ReceiverDetails = () => {
                   onChange={handleChange}
                   className="border rounded-lg p-3 w-full"
                 >
-                  <option value="">Receiver State</option>
-                  <option value="state1">State 1</option>
-                  <option value="state2">State 2</option>
+                  <option value="">Select State</option>
+                  {states.map((st) => (
+                    <option key={st.isoCode} value={st.isoCode}>
+                      {st.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -119,9 +141,12 @@ const ReceiverDetails = () => {
                 onChange={handleChange}
                 className="border rounded-lg p-3 w-full"
               >
-                <option value="">Receiver City</option>
-                <option value="city1">City 1</option>
-                <option value="city2">City 2</option>
+                <option value="">Select City</option>
+                {cities.map((ct) => (
+                  <option key={ct.name} value={ct.name}>
+                    {ct.name}
+                  </option>
+                ))}
               </select>
             </div>
 

@@ -6,9 +6,10 @@ export const fetchmyWallet = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
       if (!userId) throw new Error("No user ID found");
-      const response = await ApiService.get(`/wallet/${userId}`);
-      console.log("Fetched wallet data:", response.data);
+      const response = await ApiService.get(`/wallet/${userId}`, {}, token);
+      // console.log("Fetched wallet data:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

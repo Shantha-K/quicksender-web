@@ -1,5 +1,6 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import React, { Suspense, lazy } from "react";
+import { LoadScript } from "@react-google-maps/api";
 
 // Onboarding Screens
 const Welcome = lazy(() => import("./Pages/OnBoardingScreens/Welcome"));
@@ -56,68 +57,73 @@ const DeliveryDetails = lazy(() =>
 const Calculator = lazy(() => import("./Pages/Calculator/Calculator"));
 
 function App() {
+  const libraries = ["places"];
   return (
     <Router>
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center h-screen">
-            Loading...
-          </div>
-        }
+      <LoadScript
+        googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+        libraries={libraries}
       >
-        <Routes>
-          {/* Onboarding Screens */}
-          <Route path="/" element={<Welcome />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/otpverification" element={<OtpVerification />} />
-          <Route path="/create-account" element={<AccountCreation />} />
-          <Route path="/dashboard" element={<DashBoard />} />
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center h-screen">
+              Loading...
+            </div>
+          }
+        >
+          <Routes>
+            {/* Onboarding Screens */}
+            <Route path="/" element={<Welcome />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/otpverification" element={<OtpVerification />} />
+            <Route path="/create-account" element={<AccountCreation />} />
+            <Route path="/dashboard" element={<DashBoard />} />
 
+            {/* Profile Section */}
+            <Route path="/profile" element={<ProfileDashboard />} />
+            <Route path="/profile/edit-profile" element={<EditProfile />} />
+            <Route path="/profile/kyc-details" element={<KycDetails />} />
+            <Route path="/profile/my-wallet" element={<Mywallet />} />
+            <Route path="/profile/topup" element={<Topup />} />
+            <Route path="/profile/withdraw" element={<Withdraw />} />
+            <Route
+              path="/profile/terms-conditions"
+              element={<TermsConditions />}
+            />
+            <Route path="/profile/privacy-policy" element={<PrivacyPolicy />} />
 
-          {/* Profile Section */}
-          <Route path="/profile" element={<ProfileDashboard />} />
-          <Route path="/profile/edit-profile" element={<EditProfile />} />
-          <Route path="/profile/kyc-details" element={<KycDetails />} />
-          <Route path="/profile/my-wallet" element={<Mywallet />} />
-          <Route path="/profile/topup" element={<Topup />} />
-          <Route path="/profile/withdraw" element={<Withdraw />} />
-          <Route
-            path="/profile/terms-conditions"
-            element={<TermsConditions />}
-          />
-          <Route path="/profile/privacy-policy" element={<PrivacyPolicy />} />
+            {/* Send Parcel Section */}
+            <Route path="/send-parcel" element={<SendParcel />} />
+            <Route
+              path="/send-parcel/sender-details"
+              element={<SenderDetails />}
+            />
+            <Route
+              path="/send-parcel/receiver-details"
+              element={<ReceiverDetails />}
+            />
+            <Route
+              path="/send-parcel/parcel-details"
+              element={<ParcelDetails />}
+            />
+            <Route path="/send-parcel/review" element={<Summary />} />
+            <Route
+              path="/send-parcel/parcel-orders"
+              element={<ParcelOrders />}
+            />
 
+            {/* Delivery Partner Section */}
+            <Route path="/delivery-partner" element={<DeliveryPartner />} />
+            <Route
+              path="/delivery-partner/delivery-details"
+              element={<DeliveryDetails />}
+            />
 
-          {/* Send Parcel Section */}
-          <Route path="/send-parcel" element={<SendParcel />} />
-          <Route
-            path="/send-parcel/sender-details"
-            element={<SenderDetails />}
-          />
-          <Route
-            path="/send-parcel/receiver-details"
-            element={<ReceiverDetails />}
-          />
-          <Route
-            path="/send-parcel/parcel-details"
-            element={<ParcelDetails />}
-          />
-          <Route path="/send-parcel/review" element={<Summary />} />
-          <Route path="/send-parcel/parcel-orders" element={<ParcelOrders />} />
-
-
-          {/* Delivery Partner Section */}
-          <Route path="/delivery-partner" element={<DeliveryPartner />} />
-          <Route
-            path="/delivery-partner/delivery-details"
-            element={<DeliveryDetails />}
-          />
-
-
-          {/* Calculator Section */}
-          <Route path="/calculator" element={<Calculator />} />
-        </Routes>
-      </Suspense>
+            {/* Calculator Section */}
+            <Route path="/calculator" element={<Calculator />} />
+          </Routes>
+        </Suspense>
+      </LoadScript>
     </Router>
   );
 }

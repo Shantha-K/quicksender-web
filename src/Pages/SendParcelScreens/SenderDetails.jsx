@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { State, City, Country } from "country-state-city";
 
 const SenderDetails = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -13,21 +15,38 @@ const SenderDetails = () => {
     city: "",
     address: "",
   });
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "state") {
+      setCities(City.getCitiesOfState("IN", value)); // fetch cities for selected state
+      setFormData((prev) => ({
+        ...prev,
+        state: value,
+        city: "", // reset city when state changes
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
+  useEffect(() => {
+    setStates(State.getStatesOfCountry("IN")); // load Indian states once
+  }, []);
+
   const handleNext = () => {
-    // You can validate here before moving forward
-    navigate("/send-parcel/receiver-details", { state: { sender: formData } });
+    const payload = {
+      ...formData,
+    };
+    navigate("/send-parcel/receiver-details", { state: { sender: payload } });
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
-
       <main className="flex-1 w-full px-4 py-8">
         {/* Stepper */}
         <div className="flex items-center mb-8 justify-center">
@@ -97,25 +116,31 @@ const SenderDetails = () => {
                   onChange={handleChange}
                   className="border rounded-lg p-3 w-full"
                 >
-                  <option value="">Sender State</option>
-                  <option value="state1">State 1</option>
-                  <option value="state2">State 2</option>
+                  <option value="">Select State</option>
+                  {states.map((s) => (
+                    <option key={s.isoCode} value={s.isoCode}>
+                      {s.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
 
             {/* Row 3 */}
             <div>
-              <label className="block mb-2 font-medium"> City</label>
+              <label className="block mb-2 font-medium">City</label>
               <select
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
                 className="border rounded-lg p-3 w-full"
               >
-                <option value="">Sender city</option>
-                <option value="city1">City 1</option>
-                <option value="city2">City 2</option>
+                <option value="">Select City</option>
+                {cities.map((c) => (
+                  <option key={c.name} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -143,7 +168,6 @@ const SenderDetails = () => {
           </div>
         </div>
       </main>
-
       <Footer />
     </div>
   );

@@ -48,6 +48,7 @@ const Withdraw = () => {
     e.preventDefault();
 
     const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
     const payload = {
       userId,
       amount: Number(amount),
@@ -55,7 +56,7 @@ const Withdraw = () => {
     };
 
     try {
-      const response = await ApiService.post("wallet/withdraw", payload);
+      const response = await ApiService.post("wallet/withdraw", payload, token);
       if (response.data.success) {
         setShowModal(true);
       } else {
