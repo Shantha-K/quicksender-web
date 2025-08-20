@@ -54,7 +54,7 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md">
+          <div onClick={()=>navigate("/delivery-partner")} className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md">
             <h3 className="font-semibold mb-2">Delivery Parcel</h3>
             <p className="text-sm text-gray-600 mb-2">
               Arrange for safe and timely delivery of your packages.

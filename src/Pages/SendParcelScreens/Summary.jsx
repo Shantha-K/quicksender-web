@@ -23,6 +23,7 @@ const Summary = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [sentOtp, setSentOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [trackingId, setTrackingId] = useState(null);
 
   useEffect(() => {
     dispatch(fetchmyWallet());
@@ -63,12 +64,16 @@ const Summary = () => {
     }
 
     const userId = localStorage.getItem("userId");
-
+    const token = localStorage.getItem("token");
     try {
       setLoading(true);
-      const otpResponse = await ApiService.post("wallet/request-otp", {
-        userId,
-      });
+      const otpResponse = await ApiService.post(
+        "wallet/request-otp",
+        {
+          userId,
+        },
+        token
+      );
 
       if (otpResponse.data.success) {
         setSentOtp(otpResponse.data.otp);
@@ -91,18 +96,20 @@ const Summary = () => {
 
     const userId = localStorage.getItem("userId");
     const payload = { userId, otp: enteredOtp };
+    const token = localStorage.getItem("token");
     try {
       setLoading(true);
       const verifyResponse = await ApiService.post(
         "wallet/verify-otp",
-        payload
+        payload,
+        token
       );
       if (!verifyResponse.data?.success) {
         alert(verifyResponse.data?.message || "OTP verification failed");
         return;
       }
+
       // Step 3: Make delivery request
-      const token = localStorage.getItem("token");
       await makeDeliveryRequest(token);
       setShowOtpModal(false);
       setOtp(["", "", "", ""]);
@@ -157,8 +164,9 @@ const Summary = () => {
         token
       );
       if (deliveryResponse.data?.success) {
+        setTrackingId(deliveryResponse.data?.data?._id); // store tracking ID
         setShowSuccessModal(true);
-        // console.log("deliveryResponse", deliveryResponse);
+        console.log("deliveryResponse", deliveryResponse.data);
       } else {
         console.error("Delivery request failed:", error);
         alert("An error occurred while processing your request");
@@ -242,7 +250,7 @@ const Summary = () => {
         <Model
           isOpen={showSuccessModal}
           title="Your Parcel has been booked successfully"
-          message="You can track your parcel with tracking id: *****"
+          message={`You can track your parcel with tracking id: ${trackingId}`}
           buttonText="Okay"
           onClose={() => {
             setShowSuccessModal(false);
