@@ -6,15 +6,23 @@ import delivary_icon from "../../assets/delivary_icon.png";
 import van_icon from "../../assets/van_icon.png";
 import ApiService from "../../Service/ApiService";
 import { useEffect, useState } from "react";
+import { formatDistanceToNowStrict } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const ParcelOrders = () => {
   const [parcels, setParcels] = useState([]);
+  const navigate = useNavigate();
 
   const fetchParcels = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const response = await ApiService.get("delivery/requests", {
-        status: "pending",
-      });
+      const response = await ApiService.get(
+        "delivery/requests",
+        {
+          status: "pending",
+        },
+        token
+      );
       if (response.data.success) {
         setParcels(response.data.data);
       } else {
@@ -28,6 +36,11 @@ const ParcelOrders = () => {
   useEffect(() => {
     fetchParcels();
   }, []);
+
+  const handleSummary = (parcelId) => {
+    navigate(`/send-parcel/parcel-summary/${parcelId}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
@@ -38,37 +51,43 @@ const ParcelOrders = () => {
         </header>
 
         {/* Top Section: Parcel Status + Map */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center mb-16">
-          {/* Parcel Status Card */}
-          {parcels.map((parcel) => (
-            <div
-              key={parcel._id}
-              className="bg-white rounded-lg shadow p-6 flex flex-col items-start"
-            >
-              {/* Top Row: Parcel ID + Summary */}
-              <div className="flex justify-between w-full items-center mb-2">
-                <p className="text-gray-600">
-                  Parcel ID:{" "}
-                  <span className="font-bold text-black">{parcel._id}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2  gap-20 items-start mb-16">
+          {/* Left Column: Parcel Cards */}
+          <div className="flex flex-col gap-6">
+            {parcels.map((parcel) => (
+              <div
+                key={parcel._id}
+                onClick={() => handleSummary(parcel._id)}
+                className="bg-white rounded-lg cursor-pointer shadow p-6 flex flex-col items-start"
+              >
+                {/* Top Row: Parcel ID + Summary */}
+                <div className="flex justify-between w-full items-center mb-2">
+                  <p className="text-gray-600">
+                    Parcel ID:{" "}
+                    <span className="font-bold text-black">{parcel._id}</span>
+                  </p>
+                  <span className="text-green-500 font-semibold">Summary</span>
+                </div>
+
+                {/* Status */}
+                <h3 className="font-bold text-black">
+                  {parcel.status === "pending"
+                    ? "Searching Deliver Person"
+                    : parcel.status}
+                </h3>
+
+                {/* Last Update */}
+                <p className="mt-4 text-sm text-gray-500">
+                  Last Update: Last Update:{" "}
+                  {formatDistanceToNowStrict(new Date(parcel.lastUpdate), {
+                    addSuffix: true,
+                  })}
                 </p>
-                <span className="text-green-500 font-semibold">Summary</span>
               </div>
+            ))}
+          </div>
 
-              {/* Status */}
-              <h3 className="font-bold text-black">
-                {parcel.status === "pending"
-                  ? "Searching Deliver Person"
-                  : parcel.status}
-              </h3>
-
-              {/* Last Update */}
-              <p className="mt-4 text-sm text-gray-500">
-                Last Update: {new Date(parcel.lastUpdate).toLocaleString()}
-              </p>
-            </div>
-          ))}
-
-          {/* Map Image */}
+          {/* Right Column: Map Image */}
           <div className="h-96">
             <img
               src={location}
