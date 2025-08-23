@@ -12,9 +12,7 @@ const Mywallet = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
-  const { balance, transactions, loading, error } = useSelector(
-    (state) => state.myWallet
-  );
+  const { balance, transactions } = useSelector((state) => state.myWallet);
 
   useEffect(() => {
     dispatch(fetchmyWallet());

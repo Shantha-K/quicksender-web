@@ -22,8 +22,7 @@ const SideBar = () => {
   const IMG_URL = import.meta.env.VITE_REACT_IMAGE_URL;
 
   const handleLogout = () => {
-    dispatch(clearUser());
-    navigate("/"); // Redirect to the welcome page
+    navigate("/");
   };
 
   useEffect(() => {

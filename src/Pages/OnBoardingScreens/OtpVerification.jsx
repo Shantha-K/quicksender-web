@@ -39,7 +39,12 @@ const OTPVerification = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("mobile", response.data.data.mobile);
         localStorage.removeItem("otp");
-        setShowModal(true);
+
+        if (response.data.existed === false) {
+          navigate("/create-account");
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         setError("Invalid OTP");
       }
@@ -117,7 +122,11 @@ const OTPVerification = () => {
           title="OTP Verified!"
           message="Your OTP has been successfully verified."
           buttonText="Done"
-          onClose={() => navigate("/create-account")}
+          onClose={() =>
+            response.data.existed === false
+              ? navigate("/create-account")
+              : navigate("/dashboard")
+          }
         />
       )}
     </div>
