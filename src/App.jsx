@@ -52,12 +52,16 @@ const ParcelSummary = lazy(() =>
 const DeliveryPartner = lazy(() =>
   import("./Pages/DeliveryPartnerScreens/DeliveryPartner")
 );
-const DeliveryDetails = lazy(() =>
-  import("./Pages/DeliveryPartnerScreens/DeliveryDetails")
+const DeliveryParcels = lazy(() =>
+  import("./Pages/DeliveryPartnerScreens/DeliveryParcels")
+);
+const DeliveryParcelDetails = lazy(() =>
+  import("./Pages/DeliveryPartnerScreens/DeliveryParcelDetails")
 );
 
-// calculator
+// calculator & Aboutus
 const Calculator = lazy(() => import("./Pages/Calculator/Calculator"));
+const AboutUs = lazy(() => import("./Pages/AboutUs/AboutUs"));
 
 function App() {
   const libraries = ["places"];
@@ -122,12 +126,19 @@ function App() {
             {/* Delivery Partner Section */}
             <Route path="/delivery-partner" element={<DeliveryPartner />} />
             <Route
-              path="/delivery-partner/delivery-details"
-              element={<DeliveryDetails />}
+              path="/delivery-partner/delivery-parcels"
+              element={<DeliveryParcels />}
+            />
+            <Route
+              path="/delivery-partner/delivery-parcel-details/:parcelId"
+              element={<DeliveryParcelDetails />}
             />
 
             {/* Calculator Section */}
             <Route path="/calculator" element={<Calculator />} />
+
+            {/* About Section */}
+            <Route path="/about-us" element={<AboutUs />} />
           </Routes>
         </Suspense>
       </LoadScript>

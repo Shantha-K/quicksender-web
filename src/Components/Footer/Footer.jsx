@@ -1,4 +1,8 @@
 import logo from "../../assets/shifter.png";
+import twitter from "../../assets/twitter.png";
+import facebook from "../../assets/facebook.png";
+import insta from "../../assets/insta.png";
+import linkedin from "../../assets/Linkedin.png";
 
 const Footer = () => {
   return (
@@ -40,11 +44,51 @@ const Footer = () => {
         </div>
         <div>
           <h4 className="font-semibold mb-2">Follow Us</h4>
-          <div className="flex gap-2">
-            <div className="w-6 h-6 bg-white rounded-full" />
-            <div className="w-6 h-6 bg-white rounded-full" />
-            <div className="w-6 h-6 bg-white rounded-full" />
-            <div className="w-6 h-6 bg-white rounded-full" />
+          <div className="flex gap-3">
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={twitter}
+                alt="Twitter"
+                className="w-8 h-8 cursor-pointer  transition"
+              />
+            </a>
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={facebook}
+                alt="Facebook"
+                className="w-8 h-8 cursor-pointer  transition"
+              />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={insta}
+                alt="Instagram"
+                className="w-8 h-8 cursor-pointer  transition"
+              />
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={linkedin}
+                alt="LinkedIn"
+                className="w-8 h-8 cursor-pointer  transition"
+              />
+            </a>
           </div>
         </div>
       </div>

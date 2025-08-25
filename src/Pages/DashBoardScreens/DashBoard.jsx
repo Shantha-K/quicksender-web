@@ -4,6 +4,7 @@ import noparcel from "../../assets/noparcel.png";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
+// import { FiSend, FaTruck } from "react-icons/fa";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const Dashboard = () => {
             className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md"
             onClick={() => navigate("/send-parcel")}
           >
+            {/* <FiSend className="text-blue-600 mb-2" /> */}
             <h3 className="font-semibold mb-2">Send Parcel</h3>
             <p className="text-sm text-gray-600 mb-2">
               Send your parcel from any location to any destination worldwide.
@@ -54,7 +56,11 @@ const Dashboard = () => {
             />
           </div>
 
-          <div onClick={()=>navigate("/delivery-partner")} className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md">
+          <div
+            onClick={() => navigate("/delivery-partner")}
+            className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md"
+          >
+            {/* <FaTruck className="text-blue-600 mb-2" /> */}
             <h3 className="font-semibold mb-2">Delivery Parcel</h3>
             <p className="text-sm text-gray-600 mb-2">
               Arrange for safe and timely delivery of your packages.

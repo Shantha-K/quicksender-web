@@ -4,12 +4,14 @@ import SideBar from "../../Components/Sidebar/Sidebar";
 import { useRef, useState } from "react";
 import { FaCamera, FaUpload } from "react-icons/fa";
 import ApiService from "../../Service/ApiService";
+import { useNavigate } from "react-router-dom";
 
 const KycDetails = () => {
   const [idType, setIdType] = useState("");
   const [frontPreview, setFrontPreview] = useState(null);
   const [backPreview, setBackPreview] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   const frontInputRef = useRef(null);
   const backInputRef = useRef(null);
@@ -37,6 +39,9 @@ const KycDetails = () => {
     formData.append("kycType", idType);
     formData.append("kycFront", frontInputRef.current.files[0]);
     formData.append("kycBack", backInputRef.current.files[0]);
+
+    const userId = localStorage.getItem("userId");
+    formData.append("userId", userId);
 
     try {
       const token = localStorage.getItem("token");
@@ -176,7 +181,10 @@ const KycDetails = () => {
             title="KYC Details Submitted!"
             message="Your KYC information has been saved successfully."
             buttonText="Done"
-            onClose={() => setShowModal(false)}
+            onClose={() => {
+              setShowModal(false);
+              navigate("/profile");
+            }}
           />
         )}
       </div>
