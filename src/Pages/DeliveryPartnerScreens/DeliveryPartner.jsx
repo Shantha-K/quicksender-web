@@ -73,7 +73,7 @@ const DeliveryPartner = () => {
               Start your earning working with us as a delivery partner.
             </p>
             <button
-              onClick={() => navigate("/delivery-partner/delivery-details")}
+              onClick={() => navigate("/delivery-partner/delivery-parcels")}
               className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
             >
               Start Delivery

@@ -1,12 +1,16 @@
-import NavBar from "../../Components/NavBar/NavBar";
-import Footer from "../../Components/Footer/Footer";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { formatDistanceToNowStrict } from "date-fns";
+import { useParams } from "react-router-dom";
+import NavBar from "../../Components/NavBar/NavBar";
 import { fetchParcelById } from "../../Redux/Slice/parcelSlice";
+import Footer from "../../Components/Footer/Footer";
+import { formatDistanceToNowStrict } from "date-fns";
+import ApiService from "../../Service/ApiService";
+import Model from "../../Components/Model/Model";
 
-const ParcelSummary = () => {
+const DeliveryParcelDetails = () => {
+  const [showAcceptModal, setShowAcceptModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
   const { parcelId } = useParams();
   const dispatch = useDispatch();
   const {
@@ -25,55 +29,84 @@ const ParcelSummary = () => {
   if (error) return <div>Error: {error}</div>;
   if (!parcel) return null;
 
-  // const fetchParcelSummary = async () => {
-  //   const token = localStorage.getItem("token");
-  //   try {
-  //     const response = await ApiService.get(
-  //       `delivery/request/${parcelId}`,
-  //       {},
-  //       token
-  //     );
-  //     if (response.data.success) {
-  //       // console.log("Parcel summary response:", response.data.data);
-  //       setParcel(response.data.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching parcel summary:", error);
-  //   }
-  // };
+  const deliveryAccept = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await ApiService.post(
+        "delivery/accept",
+        {
+          requestId: parcelId,
+        },
+        token
+      );
+      if (response.data.success) {
+        setShowAcceptModal(true);
+        dispatch(fetchParcelById(parcelId));
+      } else {
+        console.error("Delivery accept failed:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Delivery accept failed:", error);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchParcelSummary();
-  // }, [parcelId]);
-
-  if (!parcel) {
-    return <div className="text-center py-10">Loading parcel summary...</div>;
-  }
+  const deliveryReject = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await ApiService.post(
+        "delivery/reject",
+        {
+          requestId: parcelId,
+        },
+        token
+      );
+      if (response.data.success) {
+        setShowRejectModal(true);
+      } else {
+        console.error("Delivery reject failed:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Delivery reject failed:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
       <main className="flex-1 max-w-screen-lg mx-auto px-4 py-10">
-        <header className="mb-12">
-          <h1 className="text-3xl font-bold text-center">Parcel Summary</h1>
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-center">Parcel Details</h1>
         </header>
-
         {/* Order ID + Status */}
-        <div className="bg-white shadow rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between mb-8">
-          <div>
-            <p className="text-lg font-semibold">Parcel ID: {parcel._id}</p>
-            <p className="text-sm text-gray-500">
-              Last Update:
-              {formatDistanceToNowStrict(new Date(parcel.lastUpdate), {
-                addSuffix: true,
-              })}
+        <div
+          key={parcel._id}
+          className="bg-white rounded-lg cursor-pointer shadow p-6 flex flex-col items-start mb-8"
+        >
+          {/* Top Row: Parcel ID + Summary */}
+          <div className="flex justify-between w-full items-center mb-1 gap-3">
+            <p className="text-gray-600">
+              Parcel ID: {parcel._id}
+              {/* <span className="font-bold text-black">{parcel._id}</span> */}
             </p>
+            <span className="text-green-500 font-semibold">Summary</span>
           </div>
-          <span className="px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+
+          {/* Status */}
+          <h3 className="font-bold text-black">
             {parcel.status === "pending"
-              ? "Pending Confirmation"
+              ? "Waiting for your Acceptance"
+              : parcel.status === "assigned"
+              ? "Waiting for Sender Acknowledgement"
               : parcel.status}
-          </span>
+          </h3>
+
+          {/* Last Update */}
+          <p className="mt-4 text-sm text-gray-500">
+            Last Update: Last Update:{" "}
+            {formatDistanceToNowStrict(new Date(parcel.lastUpdate), {
+              addSuffix: true,
+            })}
+          </p>
         </div>
 
         {/* Cards Grid */}
@@ -170,24 +203,53 @@ const ParcelSummary = () => {
               <div className="flex justify-between">
                 <span className="text-gray-600">Estimated Amount</span>
                 <span className="font-medium">
-                  ${parcel.parcel.estimatedAmount}
+                  ₹{parcel.parcel.estimatedAmount}
                 </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Cancel Button */}
-        <div className="flex justify-center mt-4">
-          <button className="w-52 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:from-red-600 hover:to-red-800 transition duration-300">
-            Cancel Booking
+        {/* Buttons */}
+        <div className="flex justify-center gap-6 mt-8">
+          <button
+            onClick={deliveryAccept}
+            className="w-40 bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold py-3 px-6 rounded-md shadow-md hover:from-green-600 hover:to-green-800 transition duration-300"
+          >
+            Accept
+          </button>
+          <button
+            onClick={deliveryReject}
+            className="w-40 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold py-3 px-6 rounded-md shadow-md hover:from-red-600 hover:to-red-800 transition duration-300"
+          >
+            Reject
           </button>
         </div>
       </main>
-
       <Footer />
+
+      {/* Accept Modal */}
+      {showAcceptModal && (
+        <Model
+          isOpen={showAcceptModal}
+          title="Delivery Accepted"
+          message="You have successfully accepted the delivery."
+          buttonText="Done"
+          onClose={() => setShowAcceptModal(false)}
+        />
+      )}
+      {/* Reject Modal */}
+      {showRejectModal && (
+        <Model
+          isOpen={showRejectModal}
+          title="Delivery Rejected"
+          message="You have successfully rejected the delivery."
+          buttonText="Done"
+          onClose={() => setShowRejectModal(false)}
+        />
+      )}
     </div>
   );
 };
 
-export default ParcelSummary;
+export default DeliveryParcelDetails;
