@@ -95,9 +95,6 @@ const Footer = () => {
       <div className="text-center text-xs text-white mt-6">
         © 2025 Shifter. All rights reserved.
       </div>
-      <div className="text-center text-xs text-white mt-1">
-        Made with <span className="font-bold">Ysisly</span>
-      </div>
     </footer>
   );
 };

@@ -47,6 +47,12 @@ const ParcelOrders = lazy(() =>
 const ParcelSummary = lazy(() =>
   import("./Pages/SendParcelScreens/ParcelSummary")
 );
+const DeliveryPersons = lazy(() =>
+  import("./Pages/SendParcelScreens/DeliveryPersons")
+);
+const CustomerReviews = lazy(() =>
+  import("./Pages/SendParcelScreens/CustomerReviews")
+);
 
 // Delivery Partner Screens
 const DeliveryPartner = lazy(() =>
@@ -121,6 +127,10 @@ function App() {
             <Route
               path="/send-parcel/parcel-summary/:parcelId"
               element={<ParcelSummary />}
+            />
+            <Route
+              path="/send-parcel/delivery-persons/:parcelId"
+              element={<DeliveryPersons />}
             />
 
             {/* Delivery Partner Section */}

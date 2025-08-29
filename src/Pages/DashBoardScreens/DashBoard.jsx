@@ -4,10 +4,17 @@ import noparcel from "../../assets/noparcel.png";
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
-// import { FiSend, FaTruck } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { fetchRegisteredUser } from "../../Redux/Slice/userSlice";
+import { useEffect } from "react";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchRegisteredUser());
+  }, [dispatch]);
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
@@ -41,7 +48,7 @@ const Dashboard = () => {
 
         <div className="flex flex-col gap-6">
           <div
-            className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md"
+            className="border border-green-300 rounded-xl p-4 cursor-pointer transition-transform duration-300 hover:scale-105 hover:border-green-500 hover:shadow-lg"
             onClick={() => navigate("/send-parcel")}
           >
             {/* <FiSend className="text-blue-600 mb-2" /> */}
@@ -58,7 +65,7 @@ const Dashboard = () => {
 
           <div
             onClick={() => navigate("/delivery-partner")}
-            className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-102 hover:border-green-500 hover:shadow-md"
+            className="border border-green-300 rounded-xl p-4 cursor-pointer transition-all duration-200 hover:scale-105 hover:border-green-500 hover:shadow-md"
           >
             {/* <FaTruck className="text-blue-600 mb-2" /> */}
             <h3 className="font-semibold mb-2">Delivery Parcel</h3>
