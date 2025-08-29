@@ -14,7 +14,13 @@ const DeliveryParcels = () => {
     try {
       const response = await ApiService.get("delivery/available");
       if (response.data.success) {
-        setParcels(response.data.data);
+        const userId = localStorage.getItem("userId");
+
+        const filteredParcels = response.data.data.filter(
+          (parcel) => parcel.userId !== userId
+        );
+
+        setParcels(filteredParcels);
       } else {
         setParcels([]);
       }

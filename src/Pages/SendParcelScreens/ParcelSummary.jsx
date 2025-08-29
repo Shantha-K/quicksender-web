@@ -1,54 +1,48 @@
 import NavBar from "../../Components/NavBar/NavBar";
 import Footer from "../../Components/Footer/Footer";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDistanceToNowStrict } from "date-fns";
 import { fetchParcelById } from "../../Redux/Slice/parcelSlice";
+import { fetchAcceptedPartners } from "../../Redux/Slice/acceptedPartnersSlice";
 
 const ParcelSummary = () => {
+  const IMG_URL = import.meta.env.VITE_REACT_IMAGE_URL;
   const { parcelId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const otp = location.state?.otp;
+  
+
   const {
     currentParcel: parcel,
-    loading,
-    error,
+    loading: parcelLoading,
+    error: parcelError,
   } = useSelector((state) => state.parcel);
+
+  const {
+    partners,
+    loading: partnersLoading,
+    error: partnersError,
+  } = useSelector((state) => state.acceptedPartners);
 
   useEffect(() => {
     if (parcelId) {
       dispatch(fetchParcelById(parcelId));
+      dispatch(fetchAcceptedPartners(parcelId));
     }
   }, [dispatch, parcelId]);
 
-  if (loading) return <div>Loading parcel summary...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!parcel) return null;
-
-  // const fetchParcelSummary = async () => {
-  //   const token = localStorage.getItem("token");
-  //   try {
-  //     const response = await ApiService.get(
-  //       `delivery/request/${parcelId}`,
-  //       {},
-  //       token
-  //     );
-  //     if (response.data.success) {
-  //       // console.log("Parcel summary response:", response.data.data);
-  //       setParcel(response.data.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching parcel summary:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchParcelSummary();
-  // }, [parcelId]);
-
-  if (!parcel) {
+  if (parcelLoading || partnersLoading) {
     return <div className="text-center py-10">Loading parcel summary...</div>;
   }
+
+  if (parcelError) return <div>Error: {parcelError}</div>;
+  if (partnersError) return <div>Error: {partnersError}</div>;
+
+  if (!parcel) return null;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -60,8 +54,20 @@ const ParcelSummary = () => {
 
         {/* Order ID + Status */}
         <div className="bg-white shadow rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between mb-8">
+          {/* Left side info */}
           <div>
             <p className="text-lg font-semibold">Parcel ID: {parcel._id}</p>
+            {otp && (
+              <div className="inline-block px-4 py-1 my-1 bg-red-400  font-bold rounded-lg shadow">
+                OTP : {otp}
+              </div>
+            )}
+            {parcel?.status === "assigned" && (
+              <p className="text-green-600 font-semibold">
+                On the way to pick up location
+              </p>
+            )}
+
             <p className="text-sm text-gray-500">
               Last Update:
               {formatDistanceToNowStrict(new Date(parcel.lastUpdate), {
@@ -69,13 +75,46 @@ const ParcelSummary = () => {
               })}
             </p>
           </div>
-          <span className="px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-            {parcel.status === "pending"
-              ? "Pending Confirmation"
-              : parcel.status}
-          </span>
-        </div>
 
+          {/* Right side - Accepted Partners */}
+          {!otp && (
+            <div className="flex flex-col items-center mt-4 md:mt-0">
+              {partners.length === 0 ? (
+                <p className="font-bold text-black">
+                  Searching for delivery person...
+                </p>
+              ) : (
+                <div className="flex items-center gap-2 mt-4">
+                  {/* Profile images */}
+                  <div className="flex -space-x-3">
+                    {partners.map((partner) => (
+                      <img
+                        key={partner._id}
+                        src={
+                          partner?.profileImage
+                            ? `${IMG_URL}/${partner.profileImage}`
+                            : "fallback-image.jpg"
+                        }
+                        alt={partner?.name || "Partner"}
+                        className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                      />
+                    ))}
+                  </div>
+
+                  {/* Choose Delivery Person button */}
+                  <button
+                    onClick={() =>
+                      navigate(`/send-parcel/delivery-persons/${parcelId}`)
+                    }
+                    className="text-green-600 font-semibold px-3 py-1 rounded hover:underline"
+                  >
+                    Choose Delivery Person
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Sender */}
@@ -178,10 +217,12 @@ const ParcelSummary = () => {
         </div>
 
         {/* Cancel Button */}
-        <div className="flex justify-center mt-4">
-          <button className="w-52 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:from-red-600 hover:to-red-800 transition duration-300">
-            Cancel Booking
-          </button>
+        <div className="flex justify-center mt-5">
+          {!otp && (
+            <button className="w-44 bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold py-3 px-6 rounded-md shadow-md hover:from-red-600 hover:to-red-800 transition duration-300">
+              Cancel Booking
+            </button>
+          )}
         </div>
       </main>
 

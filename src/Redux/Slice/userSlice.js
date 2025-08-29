@@ -24,12 +24,7 @@ const userSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {
-    // clearUser(state) {
-    //   state.user = null;
-    //   localStorage.removeItem("userId");
-    // },
-  },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchRegisteredUser.pending, (state) => {

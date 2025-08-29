@@ -7,7 +7,7 @@ import van_icon from "../../assets/van_icon.png";
 import ApiService from "../../Service/ApiService";
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ParcelOrders = () => {
   const [parcels, setParcels] = useState([]);
@@ -72,7 +72,7 @@ const ParcelOrders = () => {
                 {/* Status */}
                 <h3 className="font-bold text-black">
                   {parcel.status === "pending"
-                    ? "Searching Deliver Person"
+                    ? " Searching for delivery person..."
                     : parcel.status}
                 </h3>
 

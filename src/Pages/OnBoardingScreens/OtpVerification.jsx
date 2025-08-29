@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import otplogo from "../../assets/otplogo.png";
 import logo from "../../assets/shifter.png";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +10,11 @@ const OTPVerification = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [timer, setTimer] = useState(60); // countdown (60s)
 
   const mobile = localStorage.getItem("mobile");
 
+  // handle otp input
   const handleChange = (value, index) => {
     if (!/^[0-9]{0,1}$/.test(value)) return;
     const newOtp = [...otp];
@@ -25,6 +27,7 @@ const OTPVerification = () => {
     }
   };
 
+  // verify OTP
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
     if (enteredOtp.length !== 4) return;
@@ -53,6 +56,29 @@ const OTPVerification = () => {
       setError("Invalid or expired OTP");
     }
   };
+
+  // resend OTP
+  // const handleResendOtp = async () => {
+  //   if (timer === 0) {
+  //     try {
+  //       await ApiService.post("/resend-otp", { mobile }); // call your API
+  //       console.log("Resent OTP");
+  //       setTimer(60); // restart timer
+  //     } catch (err) {
+  //       console.error("Resend failed:", err);
+  //     }
+  //   }
+  // };
+
+  // countdown timer effect
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
 
   return (
     <div className="w-full h-screen bg-white flex flex-col justify-between px-4 sm:px-8">
@@ -87,17 +113,25 @@ const OTPVerification = () => {
                 autoComplete="one-time-code"
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, idx)}
+                onKeyDown={(e) => {
+                  if (e.key === "Backspace" && !otp[idx] && idx > 0) {
+                    document.getElementById(`otp-${idx - 1}`).focus();
+                  }
+                }}
                 className="w-12 h-14 border text-center text-xl border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             ))}
           </div>
+
           <p className="text-sm text-gray-500 mb-2">
             Sent OTP:{" "}
             <span className="font-bold">{localStorage.getItem("otp")}</span>
           </p>
+
           {/* Error Message */}
           {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
+          {/* Verify OTP */}
           <button
             onClick={handleVerifyOtp}
             disabled={otp.join("").length !== 4}
@@ -110,12 +144,28 @@ const OTPVerification = () => {
             Verify OTP
           </button>
 
-          <button className="text-green-600 text-sm font-medium hover:underline">
-            Resend OTP
+          {/* Resend OTP */}
+          <button
+            disabled={timer > 0}
+            className={`text-sm font-medium ${
+              timer > 0
+                ? "text-gray-500 cursor-not-allowed"
+                : "text-green-600 hover:underline"
+            }`}
+          >
+            {timer > 0 ? (
+              <>
+                Resend OTP in{" "}
+                <span className="text-green-600 font-semibold">{timer}s</span>
+              </>
+            ) : (
+              "Resend OTP"
+            )}
           </button>
         </div>
       </main>
 
+      {/* Success Modal */}
       {showModal && (
         <Model
           isOpen={showModal}

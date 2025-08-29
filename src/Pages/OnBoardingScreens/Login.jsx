@@ -22,8 +22,19 @@ const Login = () => {
       setError("");
 
       const response = await ApiService.post("/request-otp", { mobile });
+
+      // clear old session ONLY if the mobile is different
+      const existingMobile = localStorage.getItem("mobile");
+      if (existingMobile && existingMobile !== mobile) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("mobile");
+        localStorage.removeItem("userId");
+      }
+
+      // set fresh session values
       localStorage.setItem("otp", response.data.data.otp);
       localStorage.setItem("mobile", mobile);
+
       console.log("response", response.data);
       navigate("/otpverification");
     } catch (err) {
@@ -44,7 +55,7 @@ const Login = () => {
       <main className="flex-grow flex justify-center items-center">
         <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-sm border">
           <h2 className="text-2xl sm:text-3xl font-semibold text-center text-gray-900 mb-2">
-           Let’s get you Login!
+            Let’s get you Login!
           </h2>
           <p className="text-gray-600 text-center mb-6">
             Enter your phone number to continue your journey.
@@ -61,8 +72,9 @@ const Login = () => {
             id="phone"
             value={mobile}
             onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
+            maxLength={10}
             placeholder="Enter 10-digit phone number"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 mb-2"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
           />
 
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
@@ -77,15 +89,6 @@ const Login = () => {
           >
             Request OTP
           </button>
-
-          {/* <div className="flex justify-between text-sm text-green-600 font-medium mt-3">
-            <a href="#" className="hover:underline">
-              Forgot your phone number?
-            </a>
-            <a href="#" className="hover:underline">
-              Need help logging in?
-            </a>
-          </div> */}
         </div>
       </main>
     </div>
